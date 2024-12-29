@@ -20,5 +20,5 @@ This project is a festive React application built with Vite that showcases a bea
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Dr-MAhmed/fireworks-new-Year
    cd new-year-fireworks
