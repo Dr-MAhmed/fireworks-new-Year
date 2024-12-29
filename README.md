@@ -2,6 +2,9 @@
 
 This project is a festive React application built with Vite that showcases a beautiful fireworks display along with confetti effects to celebrate the New Year.
 
+## Live preview
+You can view the live preview of the project by clicking on this link: [New Year Fireworks](https://happynewyear-lac.vercel.app)
+
 ## Features
 
 - React application with Vite for fast development and build processes.
