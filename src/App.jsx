@@ -5,19 +5,32 @@ import './App.css';
 
 function App() {
   const fireworksRef = useRef(null);
-  const [countdown, setCountdown] = useState(10); // Set countdown time in seconds
+  const [timeRemaining, setTimeRemaining] = useState({ weeks: 0, days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [showFireworks, setShowFireworks] = useState(false);
 
+  
   useEffect(() => {
-    if (countdown > 0) {
-      const timer = setInterval(() => {
-        setCountdown(prev => prev - 1);
-      }, 1000);
-      return () => clearInterval(timer);
-    } else {
-      setShowFireworks(true);
-    }
-  }, [countdown]);
+    const targetDate = new Date('2025-01-01T00:00:00'); // New Year 2025
+    const interval = setInterval(() => {
+      const now = new Date();
+      const difference = targetDate - now;
+
+      if (difference <= 0) {
+        setShowFireworks(true);
+        clearInterval(interval);
+      } else {
+        const weeks = Math.floor(difference / (1000 * 60 * 60 * 24 * 7));
+        const days = Math.floor((difference % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        setTimeRemaining({ weeks, days, hours, minutes, seconds });
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (showFireworks && fireworksRef.current) {
@@ -105,13 +118,19 @@ function App() {
     <div className="App">
       <div className="fireworks-container" ref={fireworksRef}></div>
       <div className="message-container">
-        {countdown > 0 ? (
-          <h1 className="countdown-message">{countdown}</h1>
-        ) : (
+        {showFireworks ? (
           <>
             <h1 className="new-year-message animate">Happy New Year</h1>
             <h2 className="year">2025</h2>
           </>
+        ) : (
+          <div className="countdown-timer">
+            <h1>{timeRemaining.weeks} Weeks</h1>
+            <h1>{timeRemaining.days} Days</h1>
+            <h1>{timeRemaining.hours} Hours</h1>
+            <h1>{timeRemaining.minutes} Minutes</h1>
+            <h1>{timeRemaining.seconds} Seconds</h1>
+          </div>
         )}
       </div>
     </div>
