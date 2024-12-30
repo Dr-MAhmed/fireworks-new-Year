@@ -1,13 +1,26 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Fireworks } from 'fireworks-js';
 import confetti from 'canvas-confetti';
 import './App.css';
 
 function App() {
   const fireworksRef = useRef(null);
+  const [countdown, setCountdown] = useState(10); // Set countdown time in seconds
+  const [showFireworks, setShowFireworks] = useState(false);
 
   useEffect(() => {
-    if (fireworksRef.current) {
+    if (countdown > 0) {
+      const timer = setInterval(() => {
+        setCountdown(prev => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    } else {
+      setShowFireworks(true);
+    }
+  }, [countdown]);
+
+  useEffect(() => {
+    if (showFireworks && fireworksRef.current) {
       const fireworks = new Fireworks(fireworksRef.current, {
         autoresize: true,
         opacity: 0.5,
@@ -86,14 +99,20 @@ function App() {
         clearInterval(interval);
       };
     }
-  }, []);
+  }, [showFireworks]);
 
   return (
     <div className="App">
       <div className="fireworks-container" ref={fireworksRef}></div>
       <div className="message-container">
-        <h1 className="new-year-message">Happy New Year</h1>
-        <h2 className="year">2025</h2>
+        {countdown > 0 ? (
+          <h1 className="countdown-message">{countdown}</h1>
+        ) : (
+          <>
+            <h1 className="new-year-message animate">Happy New Year</h1>
+            <h2 className="year">2025</h2>
+          </>
+        )}
       </div>
     </div>
   );
